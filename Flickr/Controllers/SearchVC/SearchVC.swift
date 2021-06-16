@@ -28,7 +28,7 @@ class SearchVC: UIViewController {
     
     var presenter: SearchPresenterProtocol!
     
-    // MARK: Methods
+    // MARK: Life cycle viewContoller
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +42,51 @@ class SearchVC: UIViewController {
         searchBarDelegate()
     }
     
+    // MARK: Methods
+    
+    func tableViewDelegate() {
+        tableView.dataSource = self
+        tableView.delegate = self
+    }
+    
+    func searchBarDelegate() {
+        searchBar.delegate = self
+    }
+    
+    // добавление элементов на вью
+    func addSubviews() {
+        view.addSubview(tableView)
+        view.addSubview(searchBar)
+    }
+    
+    // установка констрейнтов
+    func setupConstraints() {
+        
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        let tableConstraint = [
+            tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)]
+        NSLayoutConstraint.activate(tableConstraint)
+        
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        let searchConstraint = [
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)]
+        NSLayoutConstraint.activate(searchConstraint)
+        
+    }
+    
+    // функция по установке визульных параметров экрана
+    func setupDesign() {
+        view.backgroundColor = .white
+        navigationItem.title = "Поиск"
+        navigationItem.backButtonTitle = "Назад"
+        tableView.tableFooterView = UIView()
+    }
+
 }
 
 // MARK: TableViewDataSourse and TableViewDelegate
@@ -77,6 +122,17 @@ extension SearchVC: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         presenter.loadPhotosFromFlickrBySearch(searchText: searchBar.text ?? "")
+    }
+}
+
+// MARK: Navigation
+
+extension SearchVC {
+    
+    // переход по нажатию на фотографию на DetailedVC
+    func goToDetailedVC(photo: PhotoModel) {
+        let vc = ModelBuilder.createDetailedVC(photo: photo)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 

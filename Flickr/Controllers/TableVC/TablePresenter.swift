@@ -18,7 +18,7 @@ class TablePresenter: TablePresenterProtocol {
     // MARK: Properties
 
     weak var view: TableViewProtocol!
-    var network: NetworkManager = NetworkManager() // экземпляр класса, отвечающий за интернет
+    var network: NetworkManager = NetworkManager() // экземпляр класса, отвечающий за взаимодействие с сетью
     
     var arrayOfPhotos: [PhotoModel] = []
     
@@ -33,10 +33,6 @@ class TablePresenter: TablePresenterProtocol {
     }
     
     func updateData() {
-        self.loadPhotosFromFlickr()
-    }
-    
-    func loadPhotosFromFlickr() {
         self.network.loadPhotos { (photos) in
             DispatchQueue.main.async {
                 self.arrayOfPhotos = photos

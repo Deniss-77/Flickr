@@ -18,7 +18,7 @@ class CollectionPresenter: CollectionPresenterProtocol {
     // MARK: Properties
 
     weak var view: CollectionViewProtocol!
-    var network: NetworkManagerAF = NetworkManagerAF() // экземпляр класса, отвечающий за интернет
+    var network: NetworkManagerAF = NetworkManagerAF() // экземпляр класса, отвечающий за взаимодействие с сетью
     
     var arrayOfPhotos: [PhotoModel] = []
     
@@ -33,10 +33,6 @@ class CollectionPresenter: CollectionPresenterProtocol {
     }
     
     func updateData() {
-        self.loadPhotosFromFlickr()
-    }
-    
-    func loadPhotosFromFlickr() {
         self.network.loadPhotos { (photos) in
             DispatchQueue.main.async {
                 self.arrayOfPhotos = photos

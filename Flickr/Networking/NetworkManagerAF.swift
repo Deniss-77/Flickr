@@ -11,10 +11,16 @@ import SwiftyJSON
 
 class NetworkManagerAF {
     
+    // одно из свойств parameters, отвечающее за количество загружаемых фотографий
+    var perPage = 15
+    
     func loadPhotos(completion: @escaping (_ photos: [PhotoModel]) -> ()) {
         
         guard let url = Constant.url else { return }
-        let parameters = Constant.parameters
+        var parameters = Constant.parameters
+        
+        parameters["per_page"] = perPage
+        perPage += 15
         
         AF.request(url, method: .get, parameters: parameters)
             .validate()
@@ -58,12 +64,11 @@ class NetworkManagerAF {
                     let photosJSON = json["photos"]["photo"]
                     let photos = photosJSON.arrayValue.compactMap { PhotoModel(json: $0) }
                     completion(photos)
-                
+                    
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
             }
     }
-    
     
 }

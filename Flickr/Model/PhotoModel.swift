@@ -8,7 +8,7 @@
 import Foundation
 import SwiftyJSON
 
-struct PhotoModel: Decodable {
+struct PhotoModel {
     
     let imageURL: String?
     

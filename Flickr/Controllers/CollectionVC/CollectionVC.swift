@@ -26,7 +26,7 @@ class CollectionVC: UIViewController {
     
     var presenter: CollectionPresenterProtocol!
     
-    // MARK: Methods
+    // MARK: Life cycle viewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,9 +39,36 @@ class CollectionVC: UIViewController {
         collectionViewViewDelegate()
     }
     
+    // MARK: Methods
+    
     func collectionViewViewDelegate() {
         collectionView.dataSource = self
         collectionView.delegate = self
+    }
+    
+    // добавление элементов на вью
+    func addSubviews() {
+        view.addSubview(collectionView)
+    }
+    
+    // установка констрейнтов
+    func setupConstraints() {
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        let collectionConstraint = [
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)]
+        NSLayoutConstraint.activate(collectionConstraint)
+        
+    }
+    
+    // функция по установке визульных параметров экрана
+    func setupDesign() {
+        view.backgroundColor = .white
+        navigationItem.title = "Коллекция"
+        navigationItem.backButtonTitle = "Назад"
     }
 
 }
@@ -65,6 +92,13 @@ extension CollectionVC: UICollectionViewDataSource, UICollectionViewDelegate {
         guard let model = (presenter.photoModel(at: indexPath)) else { return }
         self.goToDetailedVC(photo: model)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.item == presenter.numberOfPhotos() - 5 {
+            presenter.updateData()
+        }
+    }
+    
 }
 
 // MARK: UICollectionViewDelegateFlowLayout
@@ -73,6 +107,17 @@ extension CollectionVC: UICollectionViewDelegateFlowLayout {
    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 250)
+    }
+}
+
+// MARK: Navigation
+
+extension CollectionVC {
+ 
+    // переход по нажатию на фотографию на DetailedVC
+    func goToDetailedVC(photo: PhotoModel) {
+        let vc = ModelBuilder.createDetailedVC(photo: photo)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 

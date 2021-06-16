@@ -10,7 +10,10 @@ import SwiftyJSON
 
 class NetworkManager {
     
-    func createRequest(url: String, method: String, parameters: [String: String]) -> URLRequest {
+    // одно из свойств parameters, отвечающее за количество загружаемых фотографий
+    var perPage = 25
+    
+    func createRequest(url: String, method: String, parameters: [String: Any]) -> URLRequest {
         
         var urlLocal = url
         for (key, value) in parameters {
@@ -23,11 +26,14 @@ class NetworkManager {
     }
     
     func loadPhotos(completion: @escaping (_ photos: [PhotoModel]) -> ()) {
-        
+
         let url = Constant.urlString
         let method = "GET"
-        let parameters = Constant.parameters as [String: String]
+        var parameters = Constant.parameters
         
+        parameters["per_page"] = perPage
+        perPage += 15
+
         let request: URLRequest = self.createRequest(url: url, method: method, parameters: parameters)
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in

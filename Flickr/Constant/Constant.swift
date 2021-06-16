@@ -13,13 +13,13 @@ struct Constant {
     static let url = URL(string: "https://www.flickr.com/services/rest/")
     static let apiKey = "2397b5f798f97be71d7729ad90d68216"
     
-    static let parameters: [ String: String] = [
+    static let parameters: [ String: Any] = [
         "method" : "flickr.interestingness.getList",
         "api_key" : "2397b5f798f97be71d7729ad90d68216",
         "format" : "json",
-        "per_page" : "30",
-        "page" : "3",
-        "nojsoncallback": "1",
+        "per_page" : 20,
+        "page" : 2,
+        "nojsoncallback": 1,
         "extras": "url_q"
     ]
     
